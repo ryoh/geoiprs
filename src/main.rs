@@ -1,6 +1,8 @@
 extern crate maxminddb;
+extern crate structopt;
 
 use std::io::{self, Write};
+use std::process;
 
 use quicli::prelude::*;
 use structopt::StructOpt;
@@ -11,6 +13,9 @@ use maxminddb::{geoip2, Reader};
 
 #[derive(Debug, StructOpt)]
 struct Cli {
+    /// MaxmindDB file path
+    #[structopt(short = "f", long = "file", default_value = "./GeoLite2-City.mmdb")]
+    file: String,
     /// Search object
     ipaddr: String,
 }
@@ -67,8 +72,14 @@ fn main() -> CliResult {
     let ipaddr: IpAddr = args.ipaddr.parse().expect("Parse error IP Address");
 
     // MaxmindDB read.
-    let mmdb = "GeoLite2-City.mmdb";
-    let reader = Reader::open_readfile(mmdb).expect("Open error");
+    let mmdb = args.file;
+    let reader = match Reader::open_readfile(mmdb) {
+        Ok(f) => f,
+        Err(_) => {
+            eprintln!("Could not open MaxMind DB file.");
+            process::exit(1);
+        }
+    };
 
     // Get output data
     let data = geoiplookup(&reader, &ipaddr);
