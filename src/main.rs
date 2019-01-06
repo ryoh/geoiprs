@@ -43,7 +43,7 @@ fn main() -> CliResult {
     // City code
     let _continet = city.continent.expect("Get error continent variable");
 
-    writeln!(handle, "GeoIP City Edition, Rev 1: {}, {}", iso_code, name).unwrap();
+    writeln!(handle, "GeoIP Country Edition: {}, {}", iso_code, name).unwrap();
 
     Ok(())
 }
