@@ -22,13 +22,15 @@ struct Cli {
 
 #[derive(Debug, Serialize)]
 struct OutputData {
+    address: String,
     iso_code: String,
     name: String,
 }
 
 impl OutputData {
-    fn new(iso_code: &str, name: &str) -> OutputData {
+    fn new(address: &IpAddr, iso_code: &str, name: &str) -> OutputData {
         OutputData {
+            address: address.to_string(),
             iso_code: iso_code.to_string(),
             name: name.to_string(),
         }
@@ -37,8 +39,8 @@ impl OutputData {
     fn print(&self, handle: &mut io::BufWriter<io::StdoutLock>) {
         writeln!(
             handle,
-            "GeoIP Country Edition: {}, {}",
-            self.iso_code, self.name
+            "{}: GeoIP Country Edition: {}, {}",
+            self.address, self.iso_code, self.name
         )
         .unwrap();
     }
@@ -59,7 +61,7 @@ fn geoiplookup(reader: &maxminddb::Reader<Vec<u8>>, address: &IpAddr) -> OutputD
     let names = country.names.unwrap();
     let name = names.get("en").unwrap();
 
-    OutputData::new(&iso_code, &name)
+    OutputData::new(&address, &iso_code, &name)
 }
 
 fn main() -> CliResult {
@@ -81,11 +83,19 @@ fn main() -> CliResult {
         }
     };
 
-    // Get output data
-    let data = geoiplookup(&reader, &ipaddr);
+    let ipaddrs: Vec<IpAddr> = vec![
+        "1.1.1.1".parse().unwrap(),
+        "8.8.8.8".parse().unwrap(),
+        "157.10.100.101".parse().unwrap(),
+    ];
 
-    // print
-    data.print(&mut handle);
+    // Get output data
+    for ipaddr in ipaddrs {
+        let data = geoiplookup(&reader, &ipaddr);
+
+        // print
+        data.print(&mut handle);
+    }
 
     Ok(())
 }
