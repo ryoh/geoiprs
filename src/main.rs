@@ -15,6 +15,7 @@ struct Cli {
     ipaddr: String,
 }
 
+#[derive(Debug, Serialize)]
 struct OutputData {
     iso_code: String,
     name: String,
