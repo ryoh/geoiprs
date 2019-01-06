@@ -17,7 +17,8 @@ struct Cli {
     #[structopt(short = "f", long = "file", default_value = "./GeoLite2-City.mmdb")]
     file: String,
     /// Search object
-    ipaddr: String,
+    #[structopt(name = "IPADDRESS")]
+    ipaddrs: Vec<String>,
 }
 
 #[derive(Debug, Serialize)]
@@ -39,8 +40,8 @@ impl OutputData {
     fn print(&self, handle: &mut io::BufWriter<io::StdoutLock>) {
         writeln!(
             handle,
-            "{}: GeoIP Country Edition: {}, {}",
-            self.address, self.iso_code, self.name
+            "GeoIP Country Edition: {}, {}, ({})",
+            self.iso_code, self.name, self.address
         )
         .unwrap();
     }
@@ -48,8 +49,10 @@ impl OutputData {
 
 fn geoiplookup(reader: &maxminddb::Reader<Vec<u8>>, address: &IpAddr) -> OutputData {
     // Lookup GeoIP data
-    let city: geoip2::City = reader.lookup(*address).expect("none");
-    //println!("{:#?}", city);
+    let city: geoip2::City = match reader.lookup(*address) {
+        Ok(data) => data,
+        Err(_) => return OutputData::new(address, "XX", "Unknown country"),
+    };
 
     // Country base
     let country = city.country.expect("Get error country variable");
@@ -71,7 +74,7 @@ fn main() -> CliResult {
     let args = Cli::from_args();
 
     // Read ipv4 address
-    let ipaddr: IpAddr = args.ipaddr.parse().expect("Parse error IP Address");
+    let ipaddrs: Vec<IpAddr> = args.ipaddrs.into_iter().flat_map(|i| i.parse()).collect();
 
     // MaxmindDB read.
     let mmdb = args.file;
@@ -82,12 +85,6 @@ fn main() -> CliResult {
             process::exit(1);
         }
     };
-
-    let ipaddrs: Vec<IpAddr> = vec![
-        "1.1.1.1".parse().unwrap(),
-        "8.8.8.8".parse().unwrap(),
-        "157.10.100.101".parse().unwrap(),
-    ];
 
     // Get output data
     for ipaddr in ipaddrs {
