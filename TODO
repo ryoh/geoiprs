@@ -1,0 +1,10 @@
+
+Todo:
+  - [ ] First output geoip code and name from ip address.
+  - [ ] Add GeoIP.dat filepath argment.
+  - [ ] Add GeoLiteCity.mm filepath argment.
+  - [ ] Add multiple ip address parameters.
+  - [ ] Add ip address file list argment.
+  - [ ] Add JSON output format.
+  - [ ] Add pipe input.
+  - [ ] Add ip address v6 input.
