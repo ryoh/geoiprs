@@ -7,19 +7,6 @@
     {
       "type": "lldb",
       "request": "launch",
-      "name": "Debug Run",
-      "sourceLanguages": [
-        "rust"
-      ],
-      "terminal": "integrated",
-      "preLaunchTask": "Build single Rust file",
-      "program": "${workspaceRoot}/${fileBasenameNoExtension}",
-      "args": [],
-      "cwd": "${workspaceFolder}"
-    },
-    {
-      "type": "lldb",
-      "request": "launch",
       "name": "Debug executable 'geoiprs'",
       "cargo": {
         "args": [
@@ -31,7 +18,13 @@
           "kind": "bin"
         }
       },
-      "args": [],
+      "env": {
+        "RUST_BACKTRACE": "1"
+      },
+      "terminal": "integrated",
+      "args": [
+        "1.1.1.1"
+      ],
       "cwd": "${workspaceFolder}"
     },
     {
@@ -49,6 +42,22 @@
           "kind": "bin"
         }
       },
+      "terminal": "integrated",
+      "args": [
+        "1.1.1.1"
+      ],
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "type": "lldb",
+      "request": "launch",
+      "name": "Debug Run",
+      "sourceLanguages": [
+        "rust"
+      ],
+      "terminal": "integrated",
+      "preLaunchTask": "Build single Rust file",
+      "program": "${workspaceRoot}/${fileBasenameNoExtension}",
       "args": [],
       "cwd": "${workspaceFolder}"
     }
