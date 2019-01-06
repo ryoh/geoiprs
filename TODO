@@ -1,6 +1,6 @@
 
 Todo:
-  - [ ] First output geoip code and name from ip address.
+  - [x] First output geoip code and name from ip address.
   - [ ] Add GeoIP.dat filepath argment.
   - [ ] Add GeoLiteCity.mm filepath argment.
   - [ ] Add multiple ip address parameters.
