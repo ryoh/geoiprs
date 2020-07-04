@@ -7,3 +7,6 @@ edition = "2018"
 [dependencies]
 quicli = "0.4.0"
 structopt = "0.2.14"
+maxminddb = "0.14.0"
+anyhow = "1.0"
+thiserror = "1.0"
