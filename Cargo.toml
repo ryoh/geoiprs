@@ -5,8 +5,7 @@ authors = ["Ryoh Kawai <kawairyoh@gmail.com>"]
 edition = "2018"
 
 [dependencies]
-quicli = "0.4.0"
-structopt = "0.2.14"
+structopt = "0.3"
 maxminddb = "0.14.0"
 anyhow = "1.0"
 thiserror = "1.0"
