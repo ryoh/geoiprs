@@ -17,13 +17,19 @@ fn main() -> anyhow::Result<()> {
 
     // lookup geoip data
     let city: geoip2::City = reader.lookup(opt.ipaddr)?;
-    println!("City: {:?}", city.city.unwrap().names.unwrap()["ja"]);
 
-    let country = city.country.unwrap();
-    println!("ISO Code: {:?}", country.iso_code.unwrap());
-
-    let continent = city.continent.unwrap();
-    println!("Continent Code: {:?}", continent.code.unwrap());
+    print!("GeoIP Country: ");
+    match city.country {
+        Some(country) => {
+            let code = country.iso_code.unwrap_or("None");
+            let name = match country.names {
+                Some(names) => names.get("en").unwrap_or(&"None"),
+                None => "None",
+            };
+            println!("{}, {}", code, name);
+        }
+        None => println!("None"),
+    }
 
     Ok(())
 }
